@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-shiori/shiori/internal/database"
 	"github.com/go-shiori/shiori/internal/model"
-	"github.com/go-shiori/warc"
+	"github.com/qrsforever/warc"
 	cch "github.com/patrickmn/go-cache"
 )
 
