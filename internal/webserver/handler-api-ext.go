@@ -91,6 +91,7 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 		if err != nil && isFatalErr {
 			panic(fmt.Errorf("failed to process bookmark: %v", err))
 		}
+        fmt.Println("add book ok")
 	}
 
 	// Save bookmark to database

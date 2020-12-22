@@ -122,6 +122,7 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 	// If needed, create offline archive as well
 	if book.CreateArchive {
 		archivePath := fp.Join(req.DataDir, "archive", fmt.Sprintf("%d", book.ID))
+        fmt.Println(archivePath)
 		os.Remove(archivePath)
 
 		archivalRequest := warc.ArchivalRequest{
