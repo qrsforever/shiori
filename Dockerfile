@@ -5,6 +5,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 RUN apk add --no-cache build-base
 WORKDIR /src
 COPY . .
+# ENV GOPROXY=https://goproxy.io,direct
 ENV GOPROXY=https://mirrors.aliyun.com/goproxy
 ENV GO111MODULE=on
 RUN go build
