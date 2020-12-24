@@ -32,6 +32,8 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 		panic(fmt.Errorf("failed to clean URL: %v", err))
 	}
 
+    fmt.Println(request.URL)
+
 	// Check if bookmark already exists.
 	book, exist := h.DB.GetBookmark(0, request.URL)
 
