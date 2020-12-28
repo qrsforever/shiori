@@ -9,6 +9,7 @@ import (
 	"os"
 	fp "path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/go-shiori/shiori/internal/core"
 	"github.com/go-shiori/shiori/internal/model"
@@ -34,11 +35,14 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 
     fmt.Println(request.URL)
 
+    // QRS: for local http (just for me)
+    is_local_page := strings.Contains(request.URL, "://theta")
+
 	// Check if bookmark already exists.
 	book, exist := h.DB.GetBookmark(0, request.URL)
 
 	// If it already exists, we need to set ID and tags.
-	if exist {
+	if !is_local_page && exist {
 		book.HTML = request.HTML
 
 		mapOldTags := map[string]model.Tag{}
@@ -72,10 +76,12 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 		contentBuffer = bytes.NewBufferString(book.HTML)
 	}
 
+    fmt.Println(book.ID)
+
 	// At this point the web page already downloaded.
 	// Time to process it.
 	if contentBuffer != nil {
-		book.CreateArchive = true
+        book.CreateArchive = true
 		request := core.ProcessRequest{
 			DataDir:     h.DataDir,
 			Bookmark:    book,

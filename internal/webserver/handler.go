@@ -73,15 +73,18 @@ func (h *handler) prepareTemplates() error {
 	}
 
 	// Create template for archive overlay
+	// h.templates["archive"], err = template.New("archive").Delims("$$", "$$").Parse(
+	// 	`<div id="shiori-archive-header">
+	// 	<p id="shiori-logo"><span>栞</span>shiori</p>
+	// 	<div class="spacer"></div>
+	// 	<a href="$$.URL$$" target="_blank">View Original</a>
+	// 	$$if .HasContent$$
+	// 	<a href="/bookmark/$$.ID$$/content">View Readable</a>
+	// 	$$end$$
+	// 	</div>`)
+    // QRS modify
 	h.templates["archive"], err = template.New("archive").Delims("$$", "$$").Parse(
-		`<div id="shiori-archive-header">
-		<p id="shiori-logo"><span>栞</span>shiori</p>
-		<div class="spacer"></div>
-		<a href="$$.URL$$" target="_blank">View Original</a>
-		$$if .HasContent$$
-		<a href="/bookmark/$$.ID$$/content">View Readable</a>
-		$$end$$
-		</div>`)
+        `<div/>`)
 	if err != nil {
 		return err
 	}

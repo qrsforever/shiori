@@ -46,6 +46,9 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 		return book, true, fmt.Errorf("bookmark ID is not valid")
 	}
 
+    // QRS: for local http (just for me)
+    is_local_page := strings.Contains(book.URL, "://theta")
+
 	// Split bookmark content so it can be processed several times
 	archivalInput := bytes.NewBuffer(nil)
 	readabilityInput := bytes.NewBuffer(nil)
@@ -91,14 +94,16 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 			book.Title = book.URL
 		}
 
-		// Get image URL
-		if article.Image != "" {
-			imageURLs = append(imageURLs, article.Image)
-		}
+        if !is_local_page {
+            // Get image URL
+            if article.Image != "" {
+                imageURLs = append(imageURLs, article.Image)
+            }
 
-		if article.Favicon != "" {
-			imageURLs = append(imageURLs, article.Favicon)
-		}
+            if article.Favicon != "" {
+                imageURLs = append(imageURLs, article.Favicon)
+            }
+        }
 
 		if !isReadable {
 			book.Content = ""
@@ -111,13 +116,17 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 	strID := strconv.Itoa(book.ID)
 	imgPath := fp.Join(req.DataDir, "thumb", strID)
 
-	for _, imageURL := range imageURLs {
-		err = downloadBookImage(imageURL, imgPath)
-		if err == nil {
-			book.ImageURL = path.Join("/", "bookmark", strID, "thumb")
-			break
-		}
-	}
+    for _, imageURL := range imageURLs {
+        err = downloadBookImage(imageURL, imgPath)
+        if err == nil {
+            book.ImageURL = path.Join("/", "bookmark", strID, "thumb")
+            break
+        }
+    }
+
+    if is_local_page {
+        book.HTML = fmt.Sprintf("<iframe src=\"/bookmark/%d/archive/\" width=\"100%\" height=\"100%\" frameborder=\"0\" align=\"center\" allowfullscreen=\"true\"/>", book.ID)
+    }
 
 	// If needed, create offline archive as well
 	if book.CreateArchive {
