@@ -103,11 +103,14 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
             if article.Favicon != "" {
                 imageURLs = append(imageURLs, article.Favicon)
             }
-        }
 
-		if !isReadable {
+            if !isReadable {
+                book.Content = ""
+            }
+
+        } else {
 			book.Content = ""
-		}
+        }
 
 		book.HasContent = book.Content != ""
 	}
@@ -124,16 +127,16 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
         }
     }
 
-    if is_local_page {
-        book.HTML = fmt.Sprintf("<iframe src=\"/bookmark/%d/archive/\" width=\"100%\" height=\"100%\" frameborder=\"0\" align=\"center\" allowfullscreen=\"true\"/>", book.ID)
-    }
+    // if is_local_page {
+    book.HTML = fmt.Sprintf("<iframe src=\"/bookmark/%d/archive/\" width=\"100%\" height=\"100%\" frameborder=\"0\" align=\"center\" allowfullscreen=\"true\"/>", book.ID)
+    // }
 
 	// If needed, create offline archive as well
 	if book.CreateArchive {
 		archivePath := fp.Join(req.DataDir, "archive", fmt.Sprintf("%d", book.ID))
-        fmt.Println(archivePath)
 		os.Remove(archivePath)
 
+        fmt.Println(archivePath)
 		archivalRequest := warc.ArchivalRequest{
 			URL:         book.URL,
 			Reader:      archivalInput,
@@ -141,6 +144,7 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 			UserAgent:   userAgent,
 			LogEnabled:  req.LogArchival,
 		}
+        fmt.Println("archival request finish")
 
 		err = warc.NewArchive(archivalRequest, archivePath)
 		if err != nil {

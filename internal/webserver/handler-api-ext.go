@@ -108,6 +108,7 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 		panic(fmt.Errorf("failed to save bookmark: %v", err))
 	}
 	book = results[0]
+    fmt.Println("save bookmark ok")
 
 	// Return the new bookmark
 	w.Header().Set("Content-Type", "application/json")
