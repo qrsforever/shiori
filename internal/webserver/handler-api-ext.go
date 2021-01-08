@@ -33,16 +33,19 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 		panic(fmt.Errorf("failed to clean URL: %v", err))
 	}
 
-    fmt.Println(request.URL)
-
     // QRS: for local http (just for me)
     is_local_page := strings.Contains(request.URL, "://theta")
+    if is_local_page {
+        request.URL = strings.Replace(request.URL, "://theta", "://127.0.0.1", 1)
+    }
+
+    fmt.Println(request.URL)
 
 	// Check if bookmark already exists.
 	book, exist := h.DB.GetBookmark(0, request.URL)
 
 	// If it already exists, we need to set ID and tags.
-	if !is_local_page && exist {
+	if exist {
 		book.HTML = request.HTML
 
 		mapOldTags := map[string]model.Tag{}
@@ -88,6 +91,9 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 			Content:     contentBuffer,
 			ContentType: contentType,
 		}
+        if is_local_page {
+            request.LogArchival = true
+        }
 
 		var isFatalErr bool
 		book, isFatalErr, err = core.ProcessBookmark(request)
@@ -105,6 +111,7 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 	// Save bookmark to database
 	results, err := h.DB.SaveBookmarks(book)
 	if err != nil || len(results) == 0 {
+        fmt.Println("failed to save bookmark")
 		panic(fmt.Errorf("failed to save bookmark: %v", err))
 	}
 	book = results[0]

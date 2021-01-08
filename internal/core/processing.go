@@ -47,7 +47,7 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 	}
 
     // QRS: for local http (just for me)
-    is_local_page := strings.Contains(book.URL, "://theta")
+    is_local_page := strings.Contains(book.URL, "://127.0.0.1")
 
 	// Split bookmark content so it can be processed several times
 	archivalInput := bytes.NewBuffer(nil)
@@ -133,6 +133,7 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 
 	// If needed, create offline archive as well
 	if book.CreateArchive {
+        fmt.Println("archival create archive")
 		archivePath := fp.Join(req.DataDir, "archive", fmt.Sprintf("%d", book.ID))
 		os.Remove(archivePath)
 
@@ -144,12 +145,13 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 			UserAgent:   userAgent,
 			LogEnabled:  req.LogArchival,
 		}
-        fmt.Println("archival request finish")
 
 		err = warc.NewArchive(archivalRequest, archivePath)
 		if err != nil {
 			return book, false, fmt.Errorf("failed to create archive: %v", err)
 		}
+
+        fmt.Println("archival new archive finish")
 
 		book.HasArchive = true
 	}
