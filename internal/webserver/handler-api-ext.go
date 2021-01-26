@@ -9,7 +9,6 @@ import (
 	"os"
 	fp "path/filepath"
 	"strconv"
-	"strings"
 
 	"github.com/go-shiori/shiori/internal/core"
 	"github.com/go-shiori/shiori/internal/model"
@@ -34,12 +33,7 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 	}
 
     // QRS: for local http (just for me)
-    is_local_page := strings.Contains(request.URL, "://theta")
-    if is_local_page {
-        request.URL = strings.Replace(request.URL, "://theta", "://127.0.0.1", 1)
-    }
-
-    fmt.Println(request.URL)
+    request, is_local_page := core.PreProcessBookmark(request)
 
 	// Check if bookmark already exists.
 	book, exist := h.DB.GetBookmark(0, request.URL)

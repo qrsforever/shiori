@@ -1,7 +1,14 @@
 #!/bin/sh
 
+port=8080
+
+if [[ x$1 != x ]]
+then
+    port=$1
+fi
+
 while true;
 do
-    shiori serve -p 8080
+    shiori serve -p $port
     sleep 5
 done

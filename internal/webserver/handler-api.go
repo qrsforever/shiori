@@ -240,14 +240,7 @@ func (h *handler) apiInsertBookmark(w http.ResponseWriter, r *http.Request, ps h
 	checkError(err)
 
     // QRS
-    if !strings.HasPrefix(book.URL, "http") {
-        book.URL = "http://127.0.0.1/" + book.URL
-        if !strings.HasSuffix(book.URL, ".html") {
-            book.URL = book.URL + ".html"
-        }
-    }
-
-    fmt.Println("add bookmark url:", book.URL)
+    book, _ = core.PreProcessBookmark(book)
 
 	// Create bookmark ID
 	book.ID, err = h.DB.CreateNewID("bookmark")
@@ -263,7 +256,7 @@ func (h *handler) apiInsertBookmark(w http.ResponseWriter, r *http.Request, ps h
 
 	// Fetch data from internet
 	var isFatalErr bool
-	content, contentType, err := core.DownloadBookmark(book.URL)
+    content, contentType, err := core.DownloadBookmark(book.URL)
 	if err == nil && content != nil {
 		request := core.ProcessRequest{
 			DataDir:     h.DataDir,

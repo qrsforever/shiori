@@ -127,9 +127,7 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
         }
     }
 
-    // if is_local_page {
     book.HTML = fmt.Sprintf("<iframe src=\"/bookmark/%d/archive/\" width=\"100%\" height=\"100%\" frameborder=\"0\" align=\"center\" allowfullscreen=\"true\"/>", book.ID)
-    // }
 
 	// If needed, create offline archive as well
 	if book.CreateArchive {
@@ -161,7 +159,8 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 
 func downloadBookImage(url, dstPath string) error {
 	// Fetch data from URL
-	resp, err := httpClient.Get(url)
+	// resp, err := httpClient.Get(url)
+	resp, err := GetHttpClient().Get(url)
 	if err != nil {
 		return err
 	}
