@@ -2,6 +2,7 @@ package core
 
 import (
 	"bytes"
+	"time"
 	"fmt"
 	"image"
 	"image/color"
@@ -131,17 +132,17 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 
 	// If needed, create offline archive as well
 	if book.CreateArchive {
-        fmt.Println("archival create archive")
-		archivePath := fp.Join(req.DataDir, "archive", fmt.Sprintf("%d", book.ID))
+        year := time.Unix(int64(book.ID), 0).Year()
+		archivePath := fp.Join(req.DataDir, "archive", fmt.Sprintf("%d/%d", year, book.ID))
 		os.Remove(archivePath)
 
-        fmt.Println(archivePath)
+        fmt.Println("archival create archive:", archivePath)
 		archivalRequest := warc.ArchivalRequest{
 			URL:         book.URL,
 			Reader:      archivalInput,
 			ContentType: contentType,
 			UserAgent:   userAgent,
-			LogEnabled:  req.LogArchival,
+			LogEnabled:  true,
 		}
 
 		err = warc.NewArchive(archivalRequest, archivePath)

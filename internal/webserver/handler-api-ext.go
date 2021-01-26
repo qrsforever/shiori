@@ -33,7 +33,7 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 	}
 
     // QRS: for local http (just for me)
-    request, is_local_page := core.PreProcessBookmark(request)
+    request, _ = core.PreProcessBookmark(request)
 
 	// Check if bookmark already exists.
 	book, exist := h.DB.GetBookmark(0, request.URL)
@@ -85,9 +85,6 @@ func (h *handler) apiInsertViaExtension(w http.ResponseWriter, r *http.Request, 
 			Content:     contentBuffer,
 			ContentType: contentType,
 		}
-        if is_local_page {
-            request.LogArchival = true
-        }
 
 		var isFatalErr bool
 		book, isFatalErr, err = core.ProcessBookmark(request)

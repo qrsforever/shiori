@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"bytes"
+	"time"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -108,7 +109,9 @@ func (h *handler) serveBookmarkContent(w http.ResponseWriter, r *http.Request, p
 	}
 
 	// Check if it has archive.
-	archivePath := fp.Join(h.DataDir, "archive", strID)
+    // QRS
+    year := time.Unix(int64(id), 0).Year()
+	archivePath := fp.Join(h.DataDir, "archive", fmt.Sprintf("%d/%d", year, id))
 	if fileExists(archivePath) {
 		bookmark.HasArchive = true
 
@@ -119,7 +122,7 @@ func (h *handler) serveBookmarkContent(w http.ResponseWriter, r *http.Request, p
 		if found {
 			archive = cacheData.(*warc.Archive)
 		} else {
-			archivePath := fp.Join(h.DataDir, "archive", strID)
+			// archivePath := fp.Join(h.DataDir, "archive", strID)
 			archive, err = warc.Open(archivePath)
 			checkError(err)
 
@@ -249,6 +252,7 @@ func (h *handler) serveBookmarkArchive(w http.ResponseWriter, r *http.Request, p
 		}
 	}
 
+
 	// Open archive, look in cache first
 	var archive *warc.Archive
 	cacheData, found := h.ArchiveCache.Get(strID)
@@ -256,7 +260,10 @@ func (h *handler) serveBookmarkArchive(w http.ResponseWriter, r *http.Request, p
 	if found {
 		archive = cacheData.(*warc.Archive)
 	} else {
-		archivePath := fp.Join(h.DataDir, "archive", strID)
+        // QRS
+		// archivePath := fp.Join(h.DataDir, "archive", strID)
+        year := time.Unix(int64(id), 0).Year()
+        archivePath := fp.Join(h.DataDir, "archive", fmt.Sprintf("%d/%d", year, id))
 		archive, err = warc.Open(archivePath)
 		checkError(err)
 

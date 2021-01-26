@@ -637,13 +637,14 @@ func (db *SQLiteDatabase) RenameTag(id int, newName string) error {
 
 // CreateNewID creates new ID for specified table
 func (db *SQLiteDatabase) CreateNewID(table string) (int, error) {
-	var tableID int
-	query := fmt.Sprintf(`SELECT IFNULL(MAX(id) + 1, 1) FROM %s`, table)
+    // var tableID int
+	// query := fmt.Sprintf(`SELECT IFNULL(MAX(id) + 1, 1) FROM %s`, table)
 
-	err := db.Get(&tableID, query)
-	if err != nil && err != sql.ErrNoRows {
-		return -1, err
-	}
+	// err := db.Get(&tableID, query)
+	// if err != nil && err != sql.ErrNoRows {
+	// 	return -1, err
+	// }
 
-	return tableID, nil
+	// return tableID, nil
+    return int(time.Now().Unix()), nil
 }

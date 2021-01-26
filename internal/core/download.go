@@ -3,6 +3,7 @@ package core
 import (
 	"io"
 	"net/http"
+	"net/http/cookiejar"
 	"time"
     "os"
     "fmt"
@@ -13,27 +14,46 @@ import (
 )
 
 var httpClient = &http.Client{Timeout: time.Minute}
+var socks5Proxy = ""
 
 func GetHttpClient() *http.Client {
     s5proxy := os.Getenv("SOCKS5_PROXY")
-    if s5proxy == "" {
+    if s5proxy == socks5Proxy {
+        fmt.Fprintln(os.Stdout, "warc not change proxy")
         return httpClient
     }
-    dialer, err := proxy.SOCKS5("tcp", s5proxy, nil, proxy.Direct)
-    if err != nil {
-        fmt.Fprintln(os.Stderr, "can't connect to the proxy:", err)
-		return nil
-    }
-    client := &http.Client{
-        Timeout: 30 * time.Second,
-        Transport: &http.Transport{
-            TLSClientConfig: &tls.Config{
-                InsecureSkipVerify: true,
+	jar, _ := cookiejar.New(nil)
+    if s5proxy == "" {
+        fmt.Fprintln(os.Stdout, "warc change to no proxy")
+        httpClient = &http.Client{
+            Timeout: 30 * time.Second,
+            Transport: &http.Transport{
+                TLSClientConfig: &tls.Config{
+                    InsecureSkipVerify: true,
+                },
             },
-            Dial: dialer.Dial,
-        },
+            Jar: jar,
+        }
+    } else {
+        fmt.Fprintln(os.Stdout, "warc change to no proxy:", s5proxy)
+        dialer, err := proxy.SOCKS5("tcp", s5proxy, nil, proxy.Direct)
+        if err != nil {
+            fmt.Fprintln(os.Stderr, "can't connect to the proxy:", err)
+            return nil
+        }
+        httpClient = &http.Client{
+            Timeout: 30 * time.Second,
+            Transport: &http.Transport{
+                TLSClientConfig: &tls.Config{
+                    InsecureSkipVerify: true,
+                },
+                Dial: dialer.Dial,
+            },
+            Jar: jar,
+        }
     }
-    return client
+    socks5Proxy = s5proxy
+    return httpClient
 }
 
 // DownloadBookmark downloads bookmarked page from specified URL.
