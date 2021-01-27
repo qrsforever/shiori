@@ -135,7 +135,9 @@ func (h *handler) apiDeleteViaExtension(w http.ResponseWriter, r *http.Request, 
 		// Delete thumbnail image and archives from local disk
 		strID := strconv.Itoa(book.ID)
 		imgPath := fp.Join(h.DataDir, "thumb", strID)
-		archivePath := fp.Join(h.DataDir, "archive", strID)
+        // QRS
+		// archivePath := fp.Join(h.DataDir, "archive", strID)
+        archivePath := core.GetArchivalPath(h.DataDir, book.ID)
 
 		os.Remove(imgPath)
 		os.Remove(archivePath)

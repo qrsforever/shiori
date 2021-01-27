@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/go-shiori/shiori/internal/core"
 )
 
 func deleteCmd() *cobra.Command {
@@ -68,7 +69,10 @@ func deleteHandler(cmd *cobra.Command, args []string) {
 		for _, id := range ids {
 			strID := strconv.Itoa(id)
 			imgPath := fp.Join(dataDir, "thumb", strID)
-			archivePath := fp.Join(dataDir, "archive", strID)
+
+            // QRS
+			// archivePath := fp.Join(dataDir, "archive", strID)
+            archivePath := core.GetArchivalPath(dataDir, id)
 
 			os.Remove(imgPath)
 			os.Remove(archivePath)

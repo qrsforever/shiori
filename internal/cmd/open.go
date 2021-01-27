@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	fp "path/filepath"
-	"strconv"
+	// "strconv"
 	"strings"
 	"time"
 
@@ -14,6 +14,7 @@ import (
 	"github.com/qrsforever/warc"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/cobra"
+	"github.com/go-shiori/shiori/internal/core"
 )
 
 func openCmd() *cobra.Command {
@@ -128,9 +129,11 @@ func openHandler(cmd *cobra.Command, args []string) {
 		os.Exit(code)
 	}
 
+    // QRS
 	// Open archive
-	id := strconv.Itoa(bookmarks[0].ID)
-	archivePath := fp.Join(dataDir, "archive", id)
+	// id := strconv.Itoa(bookmarks[0].ID)
+	// archivePath := fp.Join(dataDir, "archive", id)
+    archivePath := core.GetArchivalPath(dataDir, bookmarks[0].ID)
 
 	archive, err := warc.Open(archivePath)
 	if err != nil {

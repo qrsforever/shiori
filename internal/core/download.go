@@ -11,6 +11,7 @@ import (
 	"crypto/tls"
     "golang.org/x/net/proxy"
 	"github.com/go-shiori/shiori/internal/model"
+	fp "path/filepath"
 )
 
 var httpClient = &http.Client{Timeout: time.Minute}
@@ -79,8 +80,10 @@ func DownloadBookmark(url string) (io.ReadCloser, string, error) {
 	return resp.Body, contentType, nil
 }
 
+///////////////////////////////////////////////////////////////////
+
 func PreProcessBookmark(book model.Bookmark) (model.Bookmark, bool) {
-    book.CreateArchive = true
+    // book.CreateArchive = true
     if book.Public == 1 {
         port := os.Getenv("SOCKS5_PROXY_PORT")
         if port == "" {
@@ -104,3 +107,11 @@ func PreProcessBookmark(book model.Bookmark) (model.Bookmark, bool) {
     fmt.Println("add bookmark url:", book.URL, "proxy:", os.Getenv("SOCKS5_PROXY"))
     return book, is_local_page
 }
+
+// QRS
+func GetArchivalPath(dataDir string, id int) string {
+    year := time.Unix(int64(id), 0).Year()
+	return fp.Join(dataDir, "archive", fmt.Sprintf("%d/%d", year, id))
+}
+
+///////////////////////////////////////////////////////////////////

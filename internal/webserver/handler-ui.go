@@ -2,7 +2,6 @@ package webserver
 
 import (
 	"bytes"
-	"time"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -17,6 +16,7 @@ import (
 	"github.com/go-shiori/shiori/internal/model"
 	"github.com/qrsforever/warc"
 	"github.com/julienschmidt/httprouter"
+	"github.com/go-shiori/shiori/internal/core"
 )
 
 // serveFile is handler for general file request
@@ -110,8 +110,7 @@ func (h *handler) serveBookmarkContent(w http.ResponseWriter, r *http.Request, p
 
 	// Check if it has archive.
     // QRS
-    year := time.Unix(int64(id), 0).Year()
-	archivePath := fp.Join(h.DataDir, "archive", fmt.Sprintf("%d/%d", year, id))
+    archivePath := core.GetArchivalPath(h.DataDir, id)
 	if fileExists(archivePath) {
 		bookmark.HasArchive = true
 
@@ -262,8 +261,7 @@ func (h *handler) serveBookmarkArchive(w http.ResponseWriter, r *http.Request, p
 	} else {
         // QRS
 		// archivePath := fp.Join(h.DataDir, "archive", strID)
-        year := time.Unix(int64(id), 0).Year()
-        archivePath := fp.Join(h.DataDir, "archive", fmt.Sprintf("%d/%d", year, id))
+        archivePath := core.GetArchivalPath(h.DataDir, id)
 		archive, err = warc.Open(archivePath)
 		checkError(err)
 

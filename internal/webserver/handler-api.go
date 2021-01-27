@@ -172,7 +172,9 @@ func (h *handler) apiGetBookmarks(w http.ResponseWriter, r *http.Request, ps htt
 	for i := range bookmarks {
 		strID := strconv.Itoa(bookmarks[i].ID)
 		imgPath := fp.Join(h.DataDir, "thumb", strID)
-		archivePath := fp.Join(h.DataDir, "archive", strID)
+        // QRS
+		// archivePath := fp.Join(h.DataDir, "archive", strID)
+        archivePath := core.GetArchivalPath(h.DataDir, bookmarks[i].ID)
 
 		if fileExists(imgPath) {
 			bookmarks[i].ImageURL = path.Join(h.RootPath, "bookmark", strID, "thumb")
@@ -310,7 +312,9 @@ func (h *handler) apiDeleteBookmark(w http.ResponseWriter, r *http.Request, ps h
 	for _, id := range ids {
 		strID := strconv.Itoa(id)
 		imgPath := fp.Join(h.DataDir, "thumb", strID)
-		archivePath := fp.Join(h.DataDir, "archive", strID)
+        // QRS
+		// archivePath := fp.Join(h.DataDir, "archive", strID)
+        archivePath := core.GetArchivalPath(h.DataDir, id)
 
 		os.Remove(imgPath)
 		os.Remove(archivePath)

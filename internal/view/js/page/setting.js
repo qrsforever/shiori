@@ -37,7 +37,7 @@ var template = `
             </label>
             <label>
                 <input type="checkbox" v-model="appOptions.makePublic" @change="saveSetting">
-                Make archive publicly available by default
+                Use Shadowsocks Proxy by default
             </label>
         </details>
         <details v-if="activeAccount.owner" open class="setting-group" id="setting-accounts">

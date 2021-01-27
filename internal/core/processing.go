@@ -2,7 +2,6 @@ package core
 
 import (
 	"bytes"
-	"time"
 	"fmt"
 	"image"
 	"image/color"
@@ -82,11 +81,13 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
 		book.HTML = article.Content
 
 		// If title and excerpt doesnt have submitted value, use from article
-		if !req.KeepTitle || book.Title == "" {
+		// if !req.KeepTitle || book.Title == "" {
+		if book.Title == "" {
 			book.Title = article.Title
 		}
 
-		if !req.KeepExcerpt || book.Excerpt == "" {
+		// if !req.KeepExcerpt || book.Excerpt == "" {
+		if book.Excerpt == "" {
 			book.Excerpt = article.Excerpt
 		}
 
@@ -128,12 +129,10 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
         }
     }
 
-    book.HTML = fmt.Sprintf("<iframe src=\"/bookmark/%d/archive/\" width=\"100%\" height=\"100%\" frameborder=\"0\" align=\"center\" allowfullscreen=\"true\"/>", book.ID)
-
 	// If needed, create offline archive as well
 	if book.CreateArchive {
-        year := time.Unix(int64(book.ID), 0).Year()
-		archivePath := fp.Join(req.DataDir, "archive", fmt.Sprintf("%d/%d", year, book.ID))
+        book.HTML = fmt.Sprintf("<iframe src=\"/bookmark/%d/archive/\" width=\"100%\" height=\"100%\" frameborder=\"0\" align=\"center\" allowfullscreen=\"true\"/>", book.ID)
+        archivePath := GetArchivalPath(req.DataDir, book.ID)
 		os.Remove(archivePath)
 
         fmt.Println("archival create archive:", archivePath)
@@ -153,7 +152,9 @@ func ProcessBookmark(req ProcessRequest) (model.Bookmark, bool, error) {
         fmt.Println("archival new archive finish")
 
 		book.HasArchive = true
-	}
+	} else {
+        book.HTML = fmt.Sprintf("<iframe src=\"%s\" width=\"100%\" height=\"100%\" frameborder=\"0\" align=\"center\" allowfullscreen=\"true\"/>", book.URL)
+    }
 
 	return book, false, nil
 }

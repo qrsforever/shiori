@@ -372,7 +372,7 @@ export default {
 					value: this.appOptions.useArchive,
 				}, {
 					name: "makePublic",
-					label: "Make archive publicly available",
+					label: "Use Shadowsocks Proxy",
 					type: "check",
 					value: this.appOptions.makePublic,
 				}],
@@ -466,7 +466,7 @@ export default {
 					dictionary: this.tags.map(tag => tag.name)
 				}, {
 					name: "makePublic",
-					label: "Make archive publicly available",
+					label: "Use Shadowsocks Proxy",
 					type: "check",
 					value: book.public >= 1,
 				}],
