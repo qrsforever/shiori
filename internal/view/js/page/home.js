@@ -346,6 +346,11 @@ export default {
 
 			this.loadData();
 		},
+        getNowDateFormat() {
+            var date = new Date();
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            return date.getFullYear() + "" + month
+        },
 		showDialogAdd() {
 			this.showDialog({
 				title: "New Bookmark",
@@ -353,6 +358,7 @@ export default {
 				fields: [{
 					name: "url",
 					label: "Url, start with http://...",
+                    value: "http://127.0.0.1/" + this.getNowDateFormat() + "/",
 				}, {
 					name: "title",
 					label: "Custom title (optional)"

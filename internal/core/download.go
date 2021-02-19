@@ -99,6 +99,8 @@ func PreProcessBookmark(book model.Bookmark) (model.Bookmark, bool) {
     } else {
         if !strings.HasPrefix(book.URL, "http") {
             book.URL = "http://127.0.0.1/" + book.URL
+        }
+        if !strings.HasSuffix(book.URL, ".pdf") {
             if !strings.HasSuffix(book.URL, ".html") {
                 book.URL = book.URL + ".html"
             }
