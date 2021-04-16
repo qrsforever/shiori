@@ -53,6 +53,7 @@ func ServeApp(cfg Config) error {
 	router.GET(jp("/res/*filepath"), hdl.serveFile)
 	router.GET(jp("/css/*filepath"), hdl.serveFile)
 	router.GET(jp("/fonts/*filepath"), hdl.serveFile)
+    router.GET(jp("/.well-known/pki-validation/*filepath"), hdl.serveFile)
 
 	router.GET(jp("/"), hdl.serveIndexPage)
 	router.GET(jp("/login"), hdl.serveLoginPage)

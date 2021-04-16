@@ -98,15 +98,16 @@ func (h *handler) serveBookmarkContent(w http.ResponseWriter, r *http.Request, p
 	}
 
 	// If it's not public, make sure session still valid
-	if bookmark.Public != 1 {
-		err = h.validateSession(r)
-		if err != nil {
-			newPath := path.Join(h.RootPath, "/login")
-			redirectURL := createRedirectURL(newPath, r.URL.String())
-			redirectPage(w, r, redirectURL)
-			return
-		}
-	}
+    // QRS always public
+	// if bookmark.Public != 1 {
+	// 	err = h.validateSession(r)
+	// 	if err != nil {
+	// 		newPath := path.Join(h.RootPath, "/login")
+	// 		redirectURL := createRedirectURL(newPath, r.URL.String())
+	// 		redirectPage(w, r, redirectURL)
+	// 		return
+	// 	}
+	// }
 
 	// Check if it has archive.
     // QRS
@@ -241,15 +242,16 @@ func (h *handler) serveBookmarkArchive(w http.ResponseWriter, r *http.Request, p
 	}
 
 	// If it's not public, make sure session still valid
-	if bookmark.Public != 1 {
-		err = h.validateSession(r)
-		if err != nil {
-			newPath := path.Join(h.RootPath, "/login")
-			redirectURL := createRedirectURL(newPath, r.URL.String())
-			redirectPage(w, r, redirectURL)
-			return
-		}
-	}
+    // QRS always public
+	// if bookmark.Public != 1 {
+	// 	err = h.validateSession(r)
+	// 	if err != nil {
+	// 		newPath := path.Join(h.RootPath, "/login")
+	// 		redirectURL := createRedirectURL(newPath, r.URL.String())
+	// 		redirectPage(w, r, redirectURL)
+	// 		return
+	// 	}
+	// }
 
 
 	// Open archive, look in cache first
