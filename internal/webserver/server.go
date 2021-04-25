@@ -27,9 +27,9 @@ func ServeApp(cfg Config) error {
 	hdl := handler{
 		DB:           cfg.DB,
 		DataDir:      cfg.DataDir,
-		UserCache:    cch.New(time.Hour, 10*time.Minute),
-		SessionCache: cch.New(time.Hour, 10*time.Minute),
-		ArchiveCache: cch.New(time.Minute, 5*time.Minute),
+		UserCache:    cch.New(72*time.Hour, 60*time.Minute),
+		SessionCache: cch.New(72*time.Hour, 60*time.Minute),
+		ArchiveCache: cch.New(36*time.Minute, 25*time.Minute),
 		RootPath:     cfg.RootPath,
 	}
 
