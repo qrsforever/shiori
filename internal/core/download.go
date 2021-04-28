@@ -108,7 +108,7 @@ func PreProcessBookmark(book model.Bookmark) (model.Bookmark, bool) {
             }
         }
     }
-    fmt.Println("add bookmark url:", book.URL, "proxy:", os.Getenv("SOCKS5_PROXY"))
+    fmt.Println("add bookmark url:", book.URL, "proxy:", os.Getenv("SOCKS5_PROXY"), "archive:", book.CreateArchive)
     return book, is_local_page
 }
 
