@@ -89,7 +89,7 @@
 
 					// Send request
 					this.loading = true;
-					var sessionAge = this.remember ? 12 : 1;
+					var sessionAge = this.remember ? 240 : 12; // QRS 10days:12hours
 
 					fetch(new URL("api/login", document.baseURI), {
 						method: "post",
