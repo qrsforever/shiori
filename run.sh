@@ -9,6 +9,6 @@ fi
 
 while true;
 do
-    shiori serve -p $port
+    /src/shiori serve -p $port
     sleep 5
 done
